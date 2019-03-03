@@ -1,0 +1,9 @@
+version: '3.5'
+
+services:
+  iperf:
+    image: totakoko/iperf
+    command: -s
+    restart: unless-stopped
+    ports:
+      - "5201:5201"

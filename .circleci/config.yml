@@ -1,0 +1,19 @@
+version: 2
+
+jobs:
+  deploy:
+    docker:
+      - image: totakoko/compose-deploy
+    steps:
+      - checkout
+      - run:
+          command: compose-deploy deploy
+          environment:
+            MODULES_ROOT: /root/project
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - deploy:
+          requires: []

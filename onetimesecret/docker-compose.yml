@@ -1,0 +1,33 @@
+version: '3.5'
+
+services:
+  server:
+    image: totakoko/onetimesecret:latest
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - OTS_STORE_ADDR=redis:6379
+      - OTS_STORE_PASSWORD=cue7gohquuJae4sheeGoap1oomaeNg6e
+      - OTS_PUBLICURL=https://secret.totakoko.com/
+    networks:
+      - web
+      - onetimesecret
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:secret.totakoko.com"
+
+  redis:
+    image: redis:4.0-alpine
+    command: --requirepass cue7gohquuJae4sheeGoap1oomaeNg6e
+    restart: unless-stopped
+    volumes:
+      - /srv/data/onetimesecret/redis:/data
+    networks:
+      - onetimesecret
+
+networks:
+  onetimesecret:
+  web:
+    external: true
