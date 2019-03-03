@@ -1,0 +1,9 @@
+deploy:
+  stage: deploy
+  image:
+    name: totakoko/compose-deploy
+    entrypoint: ['']
+  script:
+    - MODULES_ROOT=$PWD compose-deploy deploy
+  only:
+    - master
