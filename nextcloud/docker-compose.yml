@@ -1,0 +1,41 @@
+version: '3.5'
+
+services:
+  nextcloud:
+    image: nextcloud:16.0.3-apache
+    restart: unless-stopped
+    domainname: totakoko.com
+    hostname: docs
+    links:
+      - db
+    env_file: nextcloud.env
+    environment:
+      - NEXTCLOUD_ADMIN_USER=admin
+      - TZ=Europe/Paris
+    volumes:
+      - /srv/data/nextcloud/app:/var/www/html
+    networks:
+      - nextcloud
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:docs.totakoko.com"
+
+  db:
+    image: mariadb:10.4.6
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=bin.log --binlog-format=ROW
+    env_file: db.env
+    environment:
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+    volumes:
+      - /srv/data/nextcloud/mysql:/var/lib/mysql
+    networks:
+      - nextcloud
+
+networks:
+  nextcloud:
+  web:
+    external: true
