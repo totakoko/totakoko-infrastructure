@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+
+  mongo:
+    image: mongo:4.0.10
+    restart: unless-stopped
+    command: mongod --smallfiles --oplogSize 32
+    networks:
+      - wekan
+    volumes:
+      - /srv/data/wekan/configdb:/data/configdb
+      - /srv/data/wekan/db:/data/db
+
+  wekan:
+    image: wekanteam/wekan:v3.02
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    env_file: wekan.env
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/wekan
+      - ROOT_URL=https://wekan.totakoko.com
+    networks:
+      - web
+      - wekan
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=Host:wekan.totakoko.com"
+
+networks:
+  wekan:
+  web:
+    external: true
