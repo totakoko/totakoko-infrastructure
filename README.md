@@ -2,6 +2,16 @@
 
 This project contains the [compose-deploy](https://github.com/totakoko/compose-deploy) infrastructure running totakoko.com.
 
+Everything runs on a single [Online](https://www.online.net/en/server-dedicated/start-2-l) dedicated server.
+
+
+## Security
+
+The goal of this repository is to manage all services with git and be as open-source as possible.
+Secrets like passwords are not publicly visible and are only defined in the CI system.
+
+If you discover a vulnerability in this repository, please send an email at *security@totakoko.com*.
+
 
 ## CI Variables
 
