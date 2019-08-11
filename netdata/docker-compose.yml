@@ -1,0 +1,27 @@
+version: '3'
+services:
+  netdata:
+    image: netdata/netdata:v1.16.1
+    hostname: totakoko.com
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      - RESCRAMBLE=true
+    volumes:
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=19999"
+      - "traefik.frontend.rule=Host:netdata.totakoko.com"
+      - "traefik.frontend.auth.basic.users=${BASIC_AUTH}"
+
+networks:
+  web:
+    external: true
