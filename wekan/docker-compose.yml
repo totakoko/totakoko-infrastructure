@@ -3,7 +3,7 @@ version: '3.5'
 services:
 
   mongo:
-    image: mongo:4.0.10
+    image: mongo:4.0.12
     restart: unless-stopped
     command: mongod --smallfiles --oplogSize 32
     networks:
@@ -13,7 +13,7 @@ services:
       - /srv/data/wekan/db:/data/db
 
   wekan:
-    image: wekanteam/wekan:v3.02
+    image: wekanteam/wekan:v3.35
     restart: unless-stopped
     depends_on:
       - mongo
