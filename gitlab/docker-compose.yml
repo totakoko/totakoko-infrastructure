@@ -1,0 +1,107 @@
+version: '3'
+
+services:
+  postgresql:
+    image: sameersbn/postgresql:10-2
+    networks:
+      - gitlab
+    restart: unless-stopped
+    environment:
+      - DB_USER=gitlab
+      - DB_NAME=gitlabhq_production
+      - DB_PASS
+      - DB_EXTENSION=pg_trgm
+    volumes:
+      - /srv/data/gitlab/postgresql:/var/lib/postgresql
+
+  gitlab:
+    image: sameersbn/gitlab:12.2.1-1
+    networks:
+      - web
+      - gitlab
+    ports:
+     - "22:22"
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - postgresql
+      - registry
+    env_file: gitlab.env
+    environment:
+      - DB_ADAPTER=postgresql
+      - DB_HOST=postgresql
+      - DB_USER=gitlab
+      - DB_PASS
+      - DB_NAME=gitlabhq_production
+      - GITLAB_HOST=gitlab.totakoko.com
+      - GITLAB_TIMEZONE=Paris
+      - GITLAB_EMAIL=gitlab@totakoko.com
+      - GITLAB_EMAIL_REPLY_TO=gitlab@totakoko.com
+      - GITLAB_MATTERMOST_ENABLED=false
+      - GITLAB_MATTERMOST_URL=https://m.totakoko.com
+      - GITLAB_PAGES_ENABLED=true
+      - GITLAB_PAGES_DOMAIN=totakoko.com
+      - GITLAB_REGISTRY_ENABLED=true
+      - GITLAB_REGISTRY_HOST=registry.totakoko.com
+      - GITLAB_REGISTRY_API_URL=http://registry:5000
+      - GITLAB_REGISTRY_KEY_PATH=/certs/registry.key
+      - GITLAB_HTTPS=true
+      - GITLAB_NOTIFY_PUSHER=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - SMTP_HOST=mail.gandi.net
+      - SMTP_PORT=587
+      - SMTP_DOMAIN=totakoko.com
+    volumes:
+      - /srv/data/gitlab/certs:/certs
+      - /srv/data/gitlab/gitlab:/home/git/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:gitlab.totakoko.com"
+
+  redis:
+    image: sameersbn/redis:latest
+    networks:
+      - gitlab
+    restart: unless-stopped
+    command: --loglevel warning
+    volumes:
+      - /srv/data/gitlab/redis:/var/lib/redis
+
+  registry:
+    image: registry:2.7.1
+    networks:
+      - web
+      - gitlab
+    restart: unless-stopped
+    volumes:
+      - /srv/data/gitlab/certs:/certs:ro
+      - /srv/data/gitlab/registry:/registry
+    environment:
+      - REGISTRY_LOG_LEVEL=info
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/registry
+      - REGISTRY_AUTH_TOKEN_REALM=https://gitlab.totakoko.com/jwt/auth
+      - REGISTRY_AUTH_TOKEN_SERVICE=container_registry
+      - REGISTRY_AUTH_TOKEN_ISSUER=gitlab-issuer
+      - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/certs/registry.crt
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:registry.totakoko.com"
+
+  plantuml:
+    image: plantuml/plantuml-server:jetty
+    networks:
+      - web
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8080"
+      - "traefik.frontend.rule=Host:plantuml.totakoko.com"
+
+networks:
+  gitlab:
+  web:
+    external: true

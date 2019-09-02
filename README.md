@@ -19,6 +19,12 @@ These environment variables have been defined in the CI system:
 - SSH_HOST
 - SSH_FINGERPRINT_BASE64
 - SSH_PRIVATE_KEY_BASE64
+- cd_gitlab__DB_PASS
+- cd_gitlab_gitlab_SMTP_USER
+- cd_gitlab_gitlab_SMTP_PASS
+- cd_gitlab_gitlab_GITLAB_SECRETS_DB_KEY_BASE
+- cd_gitlab_gitlab_GITLAB_SECRETS_SECRET_KEY_BASE
+- cd_gitlab_gitlab_GITLAB_SECRETS_OTP_KEY_BASE
 - cd_mealplanner_couchdb_COUCHDB_PASSWORD
 - cd_mealplanner_couchdb_COUCHDB_USER
 - cd_mealplanner_server_MP_COUCHDB_PASSWORD
