@@ -1,0 +1,46 @@
+version: '3.5'
+
+services:
+  ui:
+    image: registry.totakoko.com/home/meal-planner-ui:latest
+    restart: unless-stopped
+    depends_on:
+      - server
+    networks:
+      - web
+      - mealplanner
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:mealplanner.totakoko.com"
+
+  server:
+    image: registry.totakoko.com/home/meal-planner-server:latest
+    restart: unless-stopped
+    depends_on:
+      - couchdb
+    env_file: server.env
+    environment:
+      - "MP_COUCHDB_URL=http://couchdb:5984/"
+    networks:
+      - web
+      - mealplanner
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:mealplanner.totakoko.com; PathPrefixStrip:/api"
+
+  couchdb:
+    image: couchdb:2.3.1
+    restart: unless-stopped
+    env_file: couchdb.env
+    volumes:
+      - /srv/data/mealplanner/couchdb-conf:/opt/couchdb/etc/local.d/
+      - /srv/data/mealplanner/couchdb:/opt/couchdb/data
+    networks:
+      - mealplanner
+
+networks:
+  mealplanner:
+  web:
+    external: true
