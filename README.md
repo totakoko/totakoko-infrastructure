@@ -32,3 +32,15 @@ These environment variables have been defined in the CI system:
 - cd_netdata__BASIC_AUTH
 - cd_wekan_wekan_MAIL_FROM
 - cd_wekan_wekan_MAIL_URL
+
+
+## Additional settings
+
+- SSH port was changed from 22 to 2222, so that it does not conflict with GitLab.
+- Docker login with registry.totakoko.com
+
+
+### Nextcloud configuration
+
+Since a change in Nextcloud 17, the configuration `'overwriteprotocol' => 'https'` must be added into `/srv/data/nextcloud/app/config/config.php`. (see [issue](https://github.com/nextcloud/server/issues/17409#issuecomment-538684976))
+
