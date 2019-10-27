@@ -13,7 +13,7 @@ services:
       - /srv/data/wekan/db:/data/db
 
   wekan:
-    image: wekanteam/wekan:v3.35
+    image: wekanteam/wekan:v3.49
     restart: unless-stopped
     depends_on:
       - mongo
