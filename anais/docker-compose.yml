@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+  postgresql:
+    image: mdillon/postgis:11-alpine
+    restart: unless-stopped
+    command: postgres -c 'config_file=/etc/postgresql/postgresql.conf'
+    environment:
+      - "POSTGRES_USER=anais"
+      - "POSTGRES_DB=anais"
+      - "POSTGRES_PASSWORD=anais"
+    volumes:
+      - ./conf/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - /srv/data/anais/postgresql:/var/lib/postgresql/data
