@@ -1,0 +1,76 @@
+version: '3.5'
+
+services:
+  ui:
+    image: betagouv/filharmonic-ui:latest
+    restart: unless-stopped
+    networks:
+      - web
+      - filharmonic
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:filharmonic.totakoko.com"
+
+  api:
+    image: betagouv/filharmonic-api:latest
+    restart: unless-stopped
+    depends_on:
+      - postgresql
+      - minio
+      - redis
+    environment:
+      - "FILHARMONIC_DATABASE_HOST=postgresql"
+      - "FILHARMONIC_DATABASE_PASSWORD=filharmonic_password"
+      - "FILHARMONIC_STORAGE_ENDPOINT=minio:9000"
+      - "FILHARMONIC_REDIS_ADDR=redis:6379"
+      - "FILHARMONIC_REDIS_PASSWORD=filharmonic"
+      - "FILHARMONIC_MODE=test"
+    env_file:
+      - api.env
+    networks:
+      - web
+      - filharmonic
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:filharmonic.totakoko.com; PathPrefixStrip:/api"
+
+  postgresql:
+    image: postgres:11.1-alpine
+    restart: unless-stopped
+    environment:
+      - "POSTGRES_USER=filharmonic"
+      - "POSTGRES_PASSWORD=filharmonic_password"
+      - "POSTGRES_DB=filharmonic"
+    volumes:
+      - /srv/data/filharmonic/postgresql:/var/lib/postgresql/data
+    networks:
+      - filharmonic
+
+  minio:
+    image: minio/minio:RELEASE.2019-01-23T23-18-58Z
+    restart: unless-stopped
+    command: server /data
+    environment:
+      MINIO_ACCESS_KEY: filharmonic
+      MINIO_SECRET_KEY: filharmonic
+    volumes:
+      - /srv/data/filharmonic/minio:/data
+    networks:
+      - filharmonic
+
+  redis:
+    image: bitnami/redis:5.0.3
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: filharmonic
+    volumes:
+      - /srv/data/filharmonic/redis:/bitnami/redis
+    networks:
+      - filharmonic
+
+networks:
+  filharmonic:
+  web:
+    external: true

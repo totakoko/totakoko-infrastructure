@@ -1,0 +1,7 @@
+- name: "Fil'Harmonic: Init redis data volume"
+  file:
+    path: /srv/data/filharmonic/redis
+    state: directory
+    mode: 0755
+    owner: 1001
+    group: 0
