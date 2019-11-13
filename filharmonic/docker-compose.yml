@@ -26,8 +26,6 @@ services:
       - "FILHARMONIC_REDIS_ADDR=redis:6379"
       - "FILHARMONIC_REDIS_PASSWORD=filharmonic"
       - "FILHARMONIC_MODE=test"
-    env_file:
-      - api.env
     networks:
       - web
       - filharmonic
