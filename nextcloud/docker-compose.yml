@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   nextcloud:
-    image: nextcloud:17.0.0-apache
+    image: nextcloud:17.0.1-apache
     restart: unless-stopped
     domainname: totakoko.com
     hostname: docs
