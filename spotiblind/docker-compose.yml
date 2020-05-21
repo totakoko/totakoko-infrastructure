@@ -1,0 +1,15 @@
+version: '3.5'
+
+services:
+  ui:
+    image: registry.totakoko.com/home/spotiblind:latest
+    restart: unless-stopped
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:spotiblind.totakoko.com"
+networks:
+  web:
+    external: true
