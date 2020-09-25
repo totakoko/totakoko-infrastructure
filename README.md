@@ -31,6 +31,10 @@ These environment variables have been defined in the CI system:
 - cd_mealplanner_server_MP_COUCHDB_PASSWORD
 - cd_mealplanner_server_MP_COUCHDB_USER
 - cd_netdata__BASIC_AUTH
+- cd_nextcloud_db_MYSQL_PASSWORD
+- cd_nextcloud_db_MYSQL_ROOT_PASSWORD
+- cd_nextcloud_nextcloud_MYSQL_PASSWORD
+- cd_nextcloud_nextcloud_NEXTCLOUD_ADMIN_PASSWORD
 - cd_wekan_wekan_MAIL_FROM
 - cd_wekan_wekan_MAIL_URL
 
