@@ -1,0 +1,77 @@
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      middlewares:
+        - compress@file
+        - headers@file
+      redirections:
+        entrypoint:
+          to: websecure
+          scheme: https
+
+  websecure:
+    address: ":443"
+    http:
+      middlewares:
+        - compress@file
+        - headers@file
+      tls:
+        certResolver: letsencrypt
+        options: default
+
+providers:
+  docker:
+    exposedByDefault: false
+    network: web
+
+  file:
+    directory: / # load the dynamic configuration from this static file
+
+log:
+  level: INFO
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: maxime@dreau.fr
+      storage: acme.json
+      httpChallenge:
+        entryPoint: web
+
+
+#
+# dynamic configuration
+#
+
+http:
+  middlewares:
+    compress:
+      compress: {}
+    headers:
+      headers:
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        sslRedirect: true
+        forceSTSHeader: true
+        stsSeconds: 315360000
+        stsIncludeSubdomains: true
+        # stsPreload: true
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      sniStrict: true
+      cipherSuites:
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256
+      curvePreferences:
+        - CurveP521
+        - CurveP384

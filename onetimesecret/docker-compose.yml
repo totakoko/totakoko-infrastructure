@@ -15,8 +15,8 @@ services:
       - onetimesecret
     labels:
       - "traefik.enable=true"
-      - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:secret.totakoko.com"
+      - "traefik.http.routers.onetimesecret.rule=Host(`secret.totakoko.com`)"
+      - "traefik.http.services.onetimesecret.loadbalancer.server.port=5000"
 
   redis:
     image: redis:4.0-alpine

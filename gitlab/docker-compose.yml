@@ -57,8 +57,8 @@ services:
       - /srv/data/gitlab/gitlab:/home/git/data
     labels:
       - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host:gitlab.totakoko.com"
+      - "traefik.http.routers.gitlab.rule=Host(`gitlab.totakoko.com`)"
+      - "traefik.http.services.gitlab.loadbalancer.server.port=80"
 
   redis:
     image: sameersbn/redis:latest
@@ -88,8 +88,8 @@ services:
       - REGISTRY_STORAGE_DELETE_ENABLED=true
     labels:
       - "traefik.enable=true"
-      - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:registry.totakoko.com"
+      - "traefik.http.routers.registry.rule=Host(`registry.totakoko.com`)"
+      - "traefik.http.services.registry.loadbalancer.server.port=5000"
 
   plantuml:
     image: plantuml/plantuml-server:jetty
@@ -98,8 +98,8 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
-      - "traefik.port=8080"
-      - "traefik.frontend.rule=Host:plantuml.totakoko.com"
+      - "traefik.http.routers.plantuml.rule=Host(`plantuml.totakoko.com`)"
+      - "traefik.http.services.plantuml.loadbalancer.server.port=8080"
 
 networks:
   gitlab:

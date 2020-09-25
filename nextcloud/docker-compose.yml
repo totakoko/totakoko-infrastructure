@@ -19,8 +19,8 @@ services:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host:docs.totakoko.com"
+      - "traefik.http.routers.nextcloud.rule=Host(`docs.totakoko.com`)"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
 
   db:
     image: mariadb:10.4.6

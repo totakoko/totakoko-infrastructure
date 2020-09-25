@@ -8,8 +8,8 @@ services:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.port=80"
-      - "traefik.frontend.rule=Host:totakoko.com"
+      - "traefik.http.routers.totakoko.rule=Host(`totakoko.com`)"
+      - "traefik.http.services.totakoko.loadbalancer.server.port=5000"
 
 networks:
   web:

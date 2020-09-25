@@ -45,9 +45,8 @@ services:
             web:
         labels:
             - "traefik.enable=true"
-            - "traefik.port=80"
-            - "traefik.frontend.rule=Host:meet.totakoko.com"
-            - "traefik.docker.network=web"
+            - "traefik.http.routers.jitsi.rule=Host(`meet.totakoko.com`)"
+            - "traefik.http.services.jitsi.loadbalancer.server.port=80"
 
     # XMPP server
     prosody:

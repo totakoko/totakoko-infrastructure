@@ -26,8 +26,8 @@ services:
       - wekan
     labels:
       - "traefik.enable=true"
-      - "traefik.port=8080"
-      - "traefik.frontend.rule=Host:wekan.totakoko.com"
+      - "traefik.http.routers.wekan.rule=Host(`wekan.totakoko.com`)"
+      - "traefik.http.services.wekan.loadbalancer.server.port=8080"
 
 networks:
   wekan:

@@ -8,8 +8,9 @@ services:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:spotiblind.totakoko.com"
+      - "traefik.http.routers.spotiblind.rule=Host(`spotiblind.totakoko.com`)"
+      - "traefik.http.services.spotiblind.loadbalancer.server.port=5000"
+
 networks:
   web:
     external: true

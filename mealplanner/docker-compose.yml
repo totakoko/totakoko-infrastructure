@@ -11,8 +11,8 @@ services:
       - mealplanner
     labels:
       - "traefik.enable=true"
-      - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:mealplanner.totakoko.com"
+      - "traefik.http.routers.mealplanner.rule=Host(`mealplanner.totakoko.com`)"
+      - "traefik.http.services.mealplanner.loadbalancer.server.port=5000"
 
   server:
     image: registry.totakoko.com/home/meal-planner-server:latest
@@ -27,8 +27,11 @@ services:
       - mealplanner
     labels:
       - "traefik.enable=true"
-      - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:mealplanner.totakoko.com; PathPrefixStrip:/api"
+      - "traefik.http.routers.mealplanner-api.rule=Host(`mealplanner.totakoko.com`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.mealplanner-api.middlewares=mealplanner-api"
+      - "traefik.http.services.mealplanner-api.loadbalancer.server.port=5000"
+      - "traefik.http.middlewares.mealplanner-api.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.mealplanner-api.stripprefix.forceslash=false"
 
   couchdb:
     image: couchdb:2.3.1
