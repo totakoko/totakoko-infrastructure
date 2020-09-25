@@ -17,6 +17,7 @@ If you discover a vulnerability in this repository, please send an email at *sec
 
 These environment variables have been defined in the CI system:
 - SSH_HOST
+- SSH_PORT
 - SSH_FINGERPRINT_BASE64
 - SSH_PRIVATE_KEY_BASE64
 - cd_gitlab__DB_PASS
