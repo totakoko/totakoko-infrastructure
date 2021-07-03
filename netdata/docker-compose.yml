@@ -1,7 +1,8 @@
 version: '3'
 services:
   netdata:
-    image: netdata/netdata:v1.16.1
+    image: netdata/netdata:v1.31.0
+    restart: unless-stopped
     hostname: totakoko.com
     cap_add:
       - SYS_PTRACE
@@ -10,10 +11,14 @@ services:
     environment:
       - RESCRAMBLE=true
     volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
     networks:
       - web
     labels:
@@ -22,6 +27,11 @@ services:
       - "traefik.http.services.netdata.loadbalancer.server.port=19999"
       - "traefik.http.routers.netdata.middlewares=netdata"
       - "traefik.http.middlewares.netdata.basicauth.users=${BASIC_AUTH}"
+
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
 
 networks:
   web:
