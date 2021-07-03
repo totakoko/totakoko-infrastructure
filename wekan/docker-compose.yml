@@ -5,12 +5,13 @@ services:
   mongo:
     image: mongo:4.4.6
     restart: unless-stopped
-    command: mongod --oplogSize 32
+    # command: mongod --oplogSize 128
+    # Disable MongoDB logs:
+    command: mongod --logpath /dev/null --oplogSize 128 --quiet
     networks:
       - wekan
     volumes:
-      - /srv/data/wekan/configdb:/data/configdb
-      - /srv/data/wekan/db:/data/db
+      - wekan-db:/data/db
 
   wekan:
     image: wekanteam/wekan:v5.36
@@ -21,6 +22,11 @@ services:
     environment:
       - MONGO_URL=mongodb://mongo:27017/wekan
       - ROOT_URL=https://wekan.totakoko.com
+      - WITH_API=true
+      - RICHER_CARD_COMMENT_EDITOR=false
+      - CARD_OPENED_WEBHOOK_ENABLED=false
+      - BIGEVENTS_PATTERN=NONE
+      - BROWSER_POLICY_ENABLED=true
     networks:
       - web
       - wekan
@@ -28,6 +34,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.wekan.rule=Host(`wekan.totakoko.com`)"
       - "traefik.http.services.wekan.loadbalancer.server.port=8080"
+
+volumes:
+  wekan-db:
+    driver: local
 
 networks:
   wekan:
