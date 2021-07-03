@@ -5,7 +5,7 @@ services:
   mongo:
     image: mongo:4.4.6
     restart: unless-stopped
-    command: mongod --smallfiles --oplogSize 32
+    command: mongod --oplogSize 32
     networks:
       - wekan
     volumes:
